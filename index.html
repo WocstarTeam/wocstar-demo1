@@ -315,6 +315,144 @@
       color: rgba(255, 255, 255, 0.9);
     }
 
+    .contact-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 220ms ease, visibility 220ms ease;
+    }
+
+    .contact-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .contact-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .contact-modal__panel {
+      position: relative;
+      width: min(94vw, 560px);
+      margin: clamp(40px, 8vh, 80px) auto 0;
+      background: rgba(20, 20, 20, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 16px;
+      padding: clamp(18px, 2vw, 28px);
+      color: #fff;
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.5);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 220ms ease;
+    }
+
+    .contact-modal.is-open .contact-modal__panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .contact-modal__close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .contact-modal__close:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .contact-modal__title {
+      font-size: clamp(19px, 1.5vw, 25px);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .contact-form__field {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .contact-form__field input,
+    .contact-form__field textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      padding: 11px 12px;
+      font: inherit;
+      text-transform: none;
+      letter-spacing: normal;
+      transition: border-color 160ms ease, background 160ms ease;
+    }
+
+    .contact-form__field textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .contact-form__field input:focus,
+    .contact-form__field textarea:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .contact-form__submit {
+      margin-top: 4px;
+      min-height: 46px;
+      border: 1px solid #f0ebe4;
+      border-radius: 10px;
+      background: #f0ebe4;
+      color: #171717;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .contact-form__submit:hover {
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    .contact-form__status {
+      min-height: 18px;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
     .press-title {
       font-size: clamp(18px, 1.35vw, 24px);
       line-height: 1.2;
@@ -860,6 +998,11 @@
         max-width: 100%;
       }
 
+      .contact-modal__panel {
+        width: min(94vw, 520px);
+        margin-top: 20px;
+      }
+
       .scene1-menu {
         right: 10px;
         top: 14px;
@@ -1010,7 +1153,7 @@
               <div>
                 <input class="footer-search" type="search" name="footer-search" placeholder="Search" aria-label="Search" />
                 <div class="footer-action-stack">
-                  <a class="footer-btn" href="#">Contact</a>
+                  <a class="footer-btn" id="contactButton" href="#">Contact</a>
                   <a class="footer-btn" href="#">News</a>
                 </div>
                 <div class="footer-social">
@@ -1067,6 +1210,34 @@
     </section>
   </main>
 
+  <div class="contact-modal" id="contactModal" aria-hidden="true">
+    <div class="contact-modal__backdrop" data-close-contact="true"></div>
+    <section class="contact-modal__panel" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+      <button type="button" class="contact-modal__close" aria-label="Close contact form" data-close-contact="true">X</button>
+      <h2 class="contact-modal__title" id="contactModalTitle">Contact Gayle</h2>
+      <form class="contact-form" id="contactForm" novalidate>
+        <label class="contact-form__field" for="contactName">
+          Name
+          <input id="contactName" name="name" type="text" required autocomplete="name" />
+        </label>
+        <label class="contact-form__field" for="contactCompany">
+          Company Name (Optional)
+          <input id="contactCompany" name="company_name" type="text" autocomplete="organization" />
+        </label>
+        <label class="contact-form__field" for="contactEmail">
+          Email
+          <input id="contactEmail" name="email" type="email" required autocomplete="email" />
+        </label>
+        <label class="contact-form__field" for="contactMessage">
+          Message
+          <textarea id="contactMessage" name="message" required></textarea>
+        </label>
+        <button class="contact-form__submit" type="submit">Submit</button>
+        <p class="contact-form__status" id="contactFormStatus" aria-live="polite"></p>
+      </form>
+    </section>
+  </div>
+
   <div class="brand">Wocstar</div>
   <nav class="scene1-menu" aria-label="Scene one menu">
     <details>
@@ -1121,6 +1292,11 @@
       const headlineSubtext = document.getElementById('headlineSubtext');
       const nextArrow = document.querySelector('.scene-next-arrow');
       const prevArrow = document.querySelector('.scene-prev-arrow');
+      const contactButton = document.getElementById('contactButton');
+      const contactModal = document.getElementById('contactModal');
+      const contactForm = document.getElementById('contactForm');
+      const contactFormStatus = document.getElementById('contactFormStatus');
+      const contactNameInput = document.getElementById('contactName');
       const sceneTitles = ['Wocstar Fund', 'Wocstar Academy', 'Wocstar Media', 'Gayle Jennings-O\'Byrne'];
       const sceneDescriptions = [
         `An early-stage fund backing bold, tech-driven ideas at the edge of what's possible.
@@ -1138,6 +1314,34 @@ We partner with visionary founders building the systems, platforms, and technolo
       let isAnimating = false;
       let touchStartY = null;
       let touchStartedInProfileCopy = false;
+      let lastFocusedElement = null;
+
+      function isContactModalOpen() {
+        return Boolean(contactModal && contactModal.classList.contains('is-open'));
+      }
+
+      function openContactModal(event) {
+        if (event) event.preventDefault();
+        if (!contactModal) return;
+        lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        contactModal.classList.add('is-open');
+        contactModal.setAttribute('aria-hidden', 'false');
+        window.setTimeout(() => {
+          if (contactNameInput) contactNameInput.focus();
+        }, 20);
+      }
+
+      function closeContactModal() {
+        if (!contactModal) return;
+        contactModal.classList.remove('is-open');
+        contactModal.setAttribute('aria-hidden', 'true');
+        if (contactFormStatus) {
+          contactFormStatus.textContent = '';
+        }
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+          lastFocusedElement.focus();
+        }
+      }
 
       function fitProfileContentToViewport() {
         const profileCopy = document.querySelector('.profile-scene .profile-copy');
@@ -1263,6 +1467,7 @@ We partner with visionary founders building the systems, platforms, and technolo
       function onWheel(event) {
         event.preventDefault();
         if (isAnimating) return;
+        if (isContactModalOpen()) return;
 
         if (currentIndex === 3) {
           const profileCopy = document.querySelector('.profile-scene .profile-copy');
@@ -1290,6 +1495,7 @@ We partner with visionary founders building the systems, platforms, and technolo
       }
 
       function onTouchMove(event) {
+        if (isContactModalOpen()) return;
         if (currentIndex === 3 && event.target && event.target.closest('.profile-copy')) {
           return;
         }
@@ -1298,6 +1504,12 @@ We partner with visionary founders building the systems, platforms, and technolo
 
       function onTouchEnd(event) {
         if (touchStartY === null || isAnimating) {
+          touchStartY = null;
+          touchStartedInProfileCopy = false;
+          return;
+        }
+
+        if (isContactModalOpen()) {
           touchStartY = null;
           touchStartedInProfileCopy = false;
           return;
@@ -1341,6 +1553,35 @@ We partner with visionary founders building the systems, platforms, and technolo
       prevArrow.addEventListener('click', (event) => {
         event.preventDefault();
         transitionTo(currentIndex - 1);
+      });
+      if (contactButton) {
+        contactButton.addEventListener('click', openContactModal);
+      }
+      if (contactModal) {
+        contactModal.addEventListener('click', (event) => {
+          if (event.target instanceof HTMLElement && event.target.matches('[data-close-contact="true"]')) {
+            closeContactModal();
+          }
+        });
+      }
+      if (contactForm) {
+        contactForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          if (!contactForm.checkValidity()) {
+            contactForm.reportValidity();
+            return;
+          }
+          if (contactFormStatus) {
+            contactFormStatus.textContent = 'Thank you. Your message has been submitted.';
+          }
+          contactForm.reset();
+          window.setTimeout(closeContactModal, 1200);
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && isContactModalOpen()) {
+          closeContactModal();
+        }
       });
       window.addEventListener('resize', () => {
         if (currentIndex === 3) {
