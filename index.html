@@ -1501,14 +1501,14 @@ We partner with visionary founders building the systems, platforms, and technolo
             const atTop = profileCopy.scrollTop <= 1;
             const atBottom = profileCopy.scrollTop >= maxScrollTop - 1;
 
-            if (event.deltaY < 0 && atTop && Math.abs(event.deltaY) >= wheelThreshold) {
+            if (event.deltaY < 0 && atTop) {
               if (shouldTransitionFromProfile(-1)) {
                 transitionTo(currentIndex - 1);
               }
               return;
             }
 
-            if (event.deltaY > 0 && atBottom && Math.abs(event.deltaY) >= wheelThreshold) {
+            if (event.deltaY > 0 && atBottom) {
               if (shouldTransitionFromProfile(1)) {
                 transitionTo(currentIndex + 1);
               }
